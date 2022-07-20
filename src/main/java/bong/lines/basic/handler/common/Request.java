@@ -2,6 +2,7 @@ package bong.lines.basic.handler.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import lombok.Data;
 import lombok.Setter;
@@ -36,4 +37,6 @@ public class Request {
             this.setBody(payload[++cnt]);
         }
     }
+
+
 }
