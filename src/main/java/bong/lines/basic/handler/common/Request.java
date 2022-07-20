@@ -2,19 +2,15 @@ package bong.lines.basic.handler.common;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import lombok.Data;
-import lombok.Setter;
 
 @Data
 public class Request {
-    private String method;
-    private String path;
-    private String version;
+    private RequestHeader requestHeader;
     private Map<String, String> options = new HashMap<>();
     private String body;
-    
+
     // TODO 코드 정리 필요.
     public Request(String requestData) {
         String[] payload = requestData.split("\r\n");
@@ -38,5 +34,23 @@ public class Request {
         }
     }
 
-
+    public void setMethod(String method) {
+        requestHeader.setMethod(method);
+    }
+    public void setVersion(String version) {
+        requestHeader.setVersion(version);
+    }
+    public void setPath(String path) {
+        requestHeader.setMethod(path);
+    }
+    
+    public String getMethod() {
+        return requestHeader.getMethod();
+    }
+    public String getPath() {
+        return requestHeader.getPath();
+    }
+    public String getVersion() {
+        return requestHeader.getVersion();
+    }
 }

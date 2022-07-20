@@ -7,27 +7,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 
+import bong.lines.basic.handler.common.Request;
+
 @Slf4j
 public abstract class HandlerMapping {
 
-    private final InputStream inputStream;
+    private final Request request;
     private final OutputStream outputStream;
 
-    public HandlerMapping(InputStream inputStream, OutputStream outputStream){
-        this.inputStream = inputStream;
+    public HandlerMapping(Request request, OutputStream outputStream){
+        this.request = request;
         this.outputStream = outputStream;
     }
 
     public void process() throws Exception {
-        BufferedReader bufferedReader = getBufferedReaderForRequest(inputStream);
 
-        String requestContent = readRequestContent(bufferedReader);
+        // getHeaderInfo(bufferedReader);
 
-        if (checkNullofRequestLine(requestContent)) return;
-
-        getHeaderInfo(bufferedReader);
-
-        doProcess(requestContent);
+        doProcess(request);
 
         responseHandling(outputStream);
     }
@@ -48,17 +45,17 @@ public abstract class HandlerMapping {
         return false;
     }
 
-    private void getHeaderInfo(BufferedReader bufferedReader) throws Exception{
-        String request = "";
+    // private void getHeaderInfo(BufferedReader bufferedReader) throws Exception{
+    //     String request = "";
 
-        do{
-            request = bufferedReader.readLine();
-            log.debug("Request Header : {}", request);
-        }
-        while (!request.isEmpty());
-    }
+    //     do{
+    //         request = bufferedReader.readLine();
+    //         log.debug("Request Header : {}", request);
+    //     }
+    //     while (!request.isEmpty());
+    // }
 
-    protected abstract void doProcess(String request) throws Exception;
+    protected abstract void doProcess(Request request) throws Exception;
 
     protected abstract void responseHandling(OutputStream outputStream);
 }
