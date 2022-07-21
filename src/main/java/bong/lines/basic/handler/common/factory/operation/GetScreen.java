@@ -17,7 +17,7 @@ public class GetScreen implements LinesGet<Object>{
         try {
             return Objects.requireNonNull(
                             IndexHTMLHandler.class
-                                    .getResourceAsStream("/templates" + screenName))
+                                    .getResourceAsStream("/templates/user" + screenName))
                     .readAllBytes();
         } catch (Exception exception) {
             throw new RuntimeException(exception);

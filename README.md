@@ -35,10 +35,10 @@ $ tar -xvf {파일명}.tgz
 
 # P0002 PostMan을 이용해서 POST, GET, DELETE, PUT 호출 시 각각의 호출 방식에 맞게 동작하는지 확인하기 
 
-- POST의 경우, Request Body에서 값을 파싱해서 처리해야한다. 요청한 파라미터 값을 그대로 응답 Json으로 받는다. 
-- GET의 경우, Query String을 통해서 값을 파싱해서 처리해야 한다. 
-- GET의 경우, .html 로 들어오는 경우에는 화면을, 그게 아닐 경우에는 Query String으로 대응한다. 
-- DELETE의 경우, "삭제되었습니다"라는 메세지를 반환할 것 
-- PUT의 경우, 전달된 파라미터를 그대로 응답 값에 Json으로 반환할 것 
+- [] POST의 경우, Request Body에서 값을 파싱해서 처리해야한다. 요청한 파라미터 값을 그대로 응답 Json으로 받는다. 
+- [x] GET의 경우, Query String을 통해서 값을 파싱해서 처리해야 한다. 
+- [x] GET의 경우, .html 로 들어오는 경우에는 화면을, 그게 아닐 경우에는 Query String으로 대응한다. 
+- [] DELETE의 경우, "삭제되었습니다"라는 메세지를 반환할 것 
+- [] PUT의 경우, 전달된 파라미터를 그대로 응답 값에 Json으로 반환할 것 
 
 [원본 URL](https://github.com/keepinmindsh/tech-education/blob/7cdba0f28a9eb76f27c0953219632a1ae2bf86d8/99_problem/README.md)

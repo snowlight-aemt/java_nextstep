@@ -8,41 +8,29 @@ import java.io.OutputStream;
 import java.util.Optional;
 
 import bong.lines.basic.handler.common.Request;
+import bong.lines.basic.handler.common.Response;
 
 @Slf4j
 public abstract class HandlerMapping {
 
     private final Request request;
-    private final OutputStream outputStream;
+    // private final OutputStream outputStream;
+
 
     public HandlerMapping(Request request, OutputStream outputStream){
         this.request = request;
-        this.outputStream = outputStream;
+        // this.outputStream = outputStream;
     }
 
-    public void process() throws Exception {
+    public Response process() throws Exception {
 
         // getHeaderInfo(bufferedReader);
 
         doProcess(request);
 
-        responseHandling(outputStream);
-    }
+        String responseContent = responseHandling();
 
-    protected abstract BufferedReader getBufferedReaderForRequest(InputStream inputStream);
-
-    protected abstract String readRequestContent(BufferedReader bufferedReader) throws Exception;
-
-    private boolean checkNullofRequestLine(String requestLine) {
-        if(!Optional.ofNullable(requestLine).isPresent()){
-            return true;
-        }
-
-        if(requestLine.indexOf("/favicon.ico") > -1){
-            return true;
-        }
-
-        return false;
+        return new Response(responseContent);
     }
 
     // private void getHeaderInfo(BufferedReader bufferedReader) throws Exception{
@@ -57,5 +45,5 @@ public abstract class HandlerMapping {
 
     protected abstract void doProcess(Request request) throws Exception;
 
-    protected abstract void responseHandling(OutputStream outputStream);
+    protected abstract String responseHandling();
 }
