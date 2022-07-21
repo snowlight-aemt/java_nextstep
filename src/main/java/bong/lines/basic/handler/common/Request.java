@@ -20,17 +20,25 @@ public class Request {
         this.setVersion(firstLine[2]);
 
         int cnt = 3;
-        while (true) {
-            String item = payload[cnt];
-            if (item.equals("")) break;
-
-            String[] keyValue = item.split(": ");
-            this.getOptions().put(keyValue[0], keyValue[1]);
-            cnt++;
+        try {
+            while (true) {
+                String item = payload[cnt];
+                if (item.equals("")) break;
+    
+                String[] keyValue = item.split(": ");
+                this.getOptions().put(keyValue[0], keyValue[1]);
+                cnt++;
+            }
+        } catch (Exception e) {
+            System.err.println(e);
         }
 
-        if (cnt < payload.length) {
-            this.setBody(payload[++cnt]);
+        if (options.containsKey("Content-Length") && cnt < payload.length) {
+            Integer len = Integer.valueOf(options.get("Content-Length"));
+            // Integer len = 20;
+            byte[] copy = new byte[len];
+            System.arraycopy(payload[++cnt].getBytes(), 0, copy, 0, len);
+            this.setBody(new String(copy));
         }
     }
 

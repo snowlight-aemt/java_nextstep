@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import bong.lines.basic.handler.common.mapping.DeleteMapping;
 import bong.lines.basic.handler.common.mapping.GetMapping;
+import bong.lines.basic.handler.common.mapping.PutMapping;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,8 +45,8 @@ public class DispatcherServlet implements Runnable {
                     return new GetMapping(request, out);
                 // case "POST":
                 //     break;
-                // case "PUT":
-                //     break;
+                case "PUT":
+                    return new PutMapping(request, out);
                 case "DELETE":
                     return new DeleteMapping(request, out);
                 default:
@@ -53,45 +54,45 @@ public class DispatcherServlet implements Runnable {
             }
         }
 
-    // TODO 클래스 분리..!
-    private static Request createRequest(InputStream in){
-        String bufStr = readRequestContent(in);
-        return new Request(bufStr);
-    }
-
-    private static String readRequestContent(InputStream in){
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        // TODO 버퍼 사이즈 수정 필요.
-        int BUF_SIZE = 1024*7;
-        char[] buf = new char[BUF_SIZE];
-        
-        try {
-            bufferedReader.read(buf);
-        } catch (Exception e) {
-            log.info("", e);
-            throw new IllegalArgumentException(e);
+        // TODO 클래스 분리..!
+        private static Request createRequest(InputStream in){
+            String bufStr = readRequestContent(in);
+            return new Request(bufStr);
         }
 
-        String bufStr = String.valueOf(buf);
+        private static String readRequestContent(InputStream in){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            // TODO 버퍼 사이즈 수정 필요.
+            int BUF_SIZE = 1024*7;
+            char[] buf = new char[BUF_SIZE];
+            
+            try {
+                bufferedReader.read(buf);
+            } catch (Exception e) {
+                log.info("", e);
+                throw new IllegalArgumentException(e);
+            }
 
-        if (checkNullofRequestLine(bufStr)) 
-            throw new IllegalArgumentException();
+            String bufStr = String.valueOf(buf);
 
-        return bufStr;
-    }
+            if (checkNullofRequestLine(bufStr)) 
+                throw new IllegalArgumentException();
 
-    private static boolean checkNullofRequestLine(String requestLine) {
-        String firstLine = requestLine.split("\r\n")[0];
-        if(!Optional.ofNullable(firstLine).isPresent()){
-            return true;
+            return bufStr;
         }
 
-        if(firstLine.indexOf("/favicon.ico") > -1){
-            return true;
-        }
+        private static boolean checkNullofRequestLine(String requestLine) {
+            String firstLine = requestLine.split("\r\n")[0];
+            if(!Optional.ofNullable(firstLine).isPresent()){
+                return true;
+            }
 
-        return false;
-    }
+            if(firstLine.indexOf("/favicon.ico") > -1){
+                return true;
+            }
+
+            return false;
+        }
     }
 
     // TODO 클래스 분리..!

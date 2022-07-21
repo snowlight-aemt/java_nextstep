@@ -3,6 +3,8 @@ package bong.lines.basic.handler.common.mapping;
 import bong.lines.basic.handler.common.Request;
 import bong.lines.basic.handler.common.code.TYPE;
 import bong.lines.basic.handler.common.factory.GetFactory;
+import bong.lines.basic.handler.common.factory.PutFactory;
+import bong.lines.basic.handler.common.factory.operation.LinePut;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
 import bong.lines.basic.handler.common.method.HTTP_METHOD;
 import lombok.extern.slf4j.Slf4j;
@@ -17,25 +19,15 @@ public class PutMapping extends HandlerMapping {
     private TYPE _type;
     private byte[] responseBody;
     private final StringBuffer responseContent = new StringBuffer();
-    public PutMapping(Request requset, OutputStream outputStream) {
-        super(requset, outputStream);
+    public PutMapping(Request request, OutputStream outputStream) {
+        super(request, outputStream);
     }
 
     @Override
     public void doProcess(Request requset) throws Exception{
-        if(isGetForScreen(requset.getFirstLine())) {
-            responseBody = (byte[])GetFactory.get(TYPE.SCREEN, requset.getFirstLine()).get();
-            _type = TYPE.SCREEN;
-        }
-
-        if (!isGetForScreen(requset.getFirstLine())){
-            responseContent.append(GetFactory.get(TYPE.QUERY_STRING, requset.getFirstLine()).get());
-            _type = TYPE.QUERY_STRING;
-        }
-    }
-
-    private boolean isGetForScreen(String requestContent) {
-        return requestContent != null && HTTP_METHOD.GET.isContain(requestContent) && requestContent.contains(".html");
+        LinePut<Object> put = PutFactory.put(TYPE.PUT_JSON, requset.getBody());
+        responseContent.append(put.put());
+        _type = TYPE.PUT_JSON;
     }
 
     @Override
@@ -45,10 +37,7 @@ public class PutMapping extends HandlerMapping {
         byte[] body = null;
 
         switch (_type){
-            case SCREEN:
-                body = responseBody;
-                break;
-            case QUERY_STRING:
+            case PUT_JSON:
                 body = responseContent
                         .toString()
                         .getBytes(StandardCharsets.UTF_8);
@@ -64,10 +53,7 @@ public class PutMapping extends HandlerMapping {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
 
             switch (_type){
-                case SCREEN:
-                    dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
-                    break;
-                case QUERY_STRING:
+                case PUT_JSON:
                     dos.writeBytes("Content-Type: application/json;charset=utf-8 \r\n");
                     break;
             }
