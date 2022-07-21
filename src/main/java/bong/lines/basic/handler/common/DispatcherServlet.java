@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import bong.lines.basic.handler.common.mapping.DeleteMapping;
 import bong.lines.basic.handler.common.mapping.GetMapping;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +28,14 @@ public class DispatcherServlet implements Runnable {
         try(InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // Request request = createRequest(in);
             // HandlerMapping handlerMapping = new GetMapping(request, out);
-            HandlerMapping handlerMapping = FactoryMethod.create(in, out);
+            HandlerMapping handlerMapping = FactoryMethodMapper.create(in, out);
             handlerMapping.process();
         }catch (Exception exception){
             log.error(exception.getMessage());
         }
     }
 
-    static class FactoryMethod {
+    static class FactoryMethodMapper {
 
         public static HandlerMapping create(InputStream in, OutputStream out) {
             Request request = createRequest(in);
@@ -45,8 +46,8 @@ public class DispatcherServlet implements Runnable {
                 //     break;
                 // case "PUT":
                 //     break;
-                // case "DELETE":
-                //     break;
+                case "DELETE":
+                    return new DeleteMapping(request, out);
                 default:
                     throw new IllegalArgumentException();
             }
