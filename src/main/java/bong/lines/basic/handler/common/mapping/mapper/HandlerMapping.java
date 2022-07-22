@@ -2,7 +2,7 @@ package bong.lines.basic.handler.common.mapping.mapper;
 
 import java.io.OutputStream;
 
-import bong.lines.basic.handler.common.Request;
+import bong.lines.basic.handler.common.mapping.Dto.Request;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

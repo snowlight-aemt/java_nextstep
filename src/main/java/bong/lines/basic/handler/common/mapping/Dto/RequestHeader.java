@@ -1,4 +1,4 @@
-package bong.lines.basic.handler.common;
+package bong.lines.basic.handler.common.mapping.Dto;
 
 import java.util.HashMap;
 import java.util.Map;

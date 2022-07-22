@@ -1,10 +1,10 @@
 package bong.lines.basic.handler.common.mapping;
 
-import bong.lines.basic.handler.common.Request;
 import bong.lines.basic.handler.common.code.TYPE;
 import bong.lines.basic.handler.common.factory.GetFactory;
 import bong.lines.basic.handler.common.factory.PutFactory;
 import bong.lines.basic.handler.common.factory.operation.LinePut;
+import bong.lines.basic.handler.common.mapping.Dto.Request;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
 import bong.lines.basic.handler.common.method.HTTP_METHOD;
 import lombok.extern.slf4j.Slf4j;
