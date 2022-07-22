@@ -1,5 +1,6 @@
 package bong.lines.basic.handler.common.mapping;
 
+import bong.lines.basic.handler.common.Request;
 import bong.lines.basic.handler.common.code.TYPE;
 import bong.lines.basic.handler.common.factory.GetFactory;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
@@ -16,30 +17,19 @@ public class GetMapping extends HandlerMapping {
     private TYPE _type;
     private byte[] responseBody;
     private final StringBuffer responseContent = new StringBuffer();
-    public GetMapping(InputStream inputStream, OutputStream outputStream) {
-        super(inputStream, outputStream);
+    public GetMapping(Request requset, OutputStream outputStream) {
+        super(requset, outputStream);
     }
 
     @Override
-    public BufferedReader getBufferedReaderForRequest(InputStream inputStream) {
-        return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String readRequestContent(BufferedReader bufferedReader) throws Exception
-    {
-        return bufferedReader.readLine();
-    }
-
-    @Override
-    public void doProcess(String requestContent) throws Exception{
-        if(isGetForScreen(requestContent)) {
-            responseBody = (byte[])GetFactory.get(TYPE.SCREEN, requestContent).get();
+    public void doProcess(Request requset) throws Exception{
+        if(isGetForScreen(requset.getFirstLine())) {
+            responseBody = (byte[])GetFactory.get(TYPE.SCREEN, requset.getFirstLine()).get();
             _type = TYPE.SCREEN;
         }
 
-        if (!isGetForScreen(requestContent)){
-            responseContent.append(GetFactory.get(TYPE.QUERY_STRING, requestContent).get());
+        if (!isGetForScreen(requset.getFirstLine())){
+            responseContent.append(GetFactory.get(TYPE.QUERY_STRING, requset.getFirstLine()).get());
             _type = TYPE.QUERY_STRING;
         }
     }

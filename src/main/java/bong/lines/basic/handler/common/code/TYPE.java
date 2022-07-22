@@ -4,5 +4,7 @@ public enum TYPE {
     QUERY_STRING,
     SCREEN,
 
-    REQUEST_BODY_JSON
+    REQUEST_BODY_JSON,
+
+    PUT_JSON
 }
