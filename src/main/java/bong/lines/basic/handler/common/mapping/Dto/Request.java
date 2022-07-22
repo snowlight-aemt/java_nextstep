@@ -5,39 +5,40 @@ import java.util.Map;
 
 import lombok.Data;
 
+// TODO 코드 정리 필요.
 @Data
 public class Request {
     private RequestHeader requestHeader = new RequestHeader();
-    // private Map<String, String> options = new HashMap<>();
     private String body;
 
-    // TODO 코드 정리 필요.
     public Request(String requestData) {
-        // TODO 마지막 라인 제거... 필요.
+        int lineCount = 0;
+        // TODO 마지막 라인 제거... 필요..;
         String[] payload = requestData.split("\r\n");
-        String[] firstLine = payload[0].split(" ");
+        
+        String[] firstLine = payload[lineCount++].split(" ");
         this.setMethod(firstLine[0]);
         this.setPath(firstLine[1]);
         this.setVersion(firstLine[2]);
 
-        int cnt = 3;
         while (true) {
-            String item = payload[cnt];
+            String item = payload[lineCount];
             if (item.equals("")) break;
 
             String[] keyValue = item.split(": ");
             this.getOptions().put(keyValue[0], keyValue[1]);
-            cnt++;
+            lineCount++;
         }
 
-        if (this.getOptions().containsKey("Content-Length") && cnt < payload.length) {
-            Integer len = Integer.valueOf(this.getOptions().get("Content-Length"));
-            // Integer len = 20;
-            byte[] copy = new byte[len];
-            System.arraycopy(payload[++cnt].getBytes(), 0, copy, 0, len);
-            this.setBody(new String(copy));
+        if (isCanReadRequestBody()) {
+            this.setBody(payload[lineCount+1]);
         }
     }
+
+    public boolean isCanReadRequestBody() {
+        return this.requestHeader.isContentLength();
+    }
+
 
     public void setMethod(String method) {
         requestHeader.setMethod(method);
@@ -47,6 +48,12 @@ public class Request {
     }
     public void setPath(String path) {
         requestHeader.setPath(path);
+    }
+    public void setBody(String body) {
+        Integer contentLength = Integer.valueOf(this.requestHeader.getContentLength());
+        byte[] copy = new byte[contentLength];
+        System.arraycopy(body.getBytes(), 0, copy, 0, contentLength);
+        this.body = new String(copy);
     }
     
     public String getFirstLine() {

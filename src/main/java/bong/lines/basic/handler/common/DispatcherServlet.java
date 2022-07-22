@@ -23,7 +23,7 @@ public class DispatcherServlet implements Runnable {
             HandlerMapping handlerMapping = FactoryMethodMapper.create(in, out);
             handlerMapping.process();
         }catch (Exception exception){
-            log.error(exception.getMessage());
+            log.error(exception.getMessage(), exception);
         }
     }
 }

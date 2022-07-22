@@ -11,4 +11,12 @@ public class RequestHeader {
     private String path;
     private String version;
     private Map<String, String> options = new HashMap<>();
+
+    public boolean isContentLength() {
+        return options.containsKey("Content-Length");
+    }
+
+    public String getContentLength() {
+        return options.get("Content-Length");
+    }
 }

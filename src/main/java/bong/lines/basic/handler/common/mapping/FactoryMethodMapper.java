@@ -29,7 +29,7 @@ public class FactoryMethodMapper {
             case "DELETE":
                 return new DeleteMapping(request, out);
             default:
-                throw new IllegalArgumentException("HTTP TYPE wrong.");
+                throw new IllegalArgumentException("not supported exception.");
         }
     }
 
