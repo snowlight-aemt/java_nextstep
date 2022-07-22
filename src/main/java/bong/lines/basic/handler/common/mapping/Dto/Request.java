@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class Request {
     private RequestHeader requestHeader = new RequestHeader();
+    // private String[] lineContents;
     private String body;
 
     public Request(String requestData) {
@@ -16,6 +17,7 @@ public class Request {
         // TODO 마지막 라인 제거... 필요..;
         String[] payload = requestData.split("\r\n");
         
+        // TODO 메소드 분리 필요.
         String[] firstLine = payload[lineCount++].split(" ");
         this.setMethod(firstLine[0]);
         this.setPath(firstLine[1]);
@@ -35,6 +37,12 @@ public class Request {
         }
     }
 
+    // public String nextLine() {
+    //     String str = this.lineContents[this.lineCount];
+    //     this.lineCount += this.lineCount;
+    //     return str;
+    // }
+
     public boolean isCanReadRequestBody() {
         return this.requestHeader.isContentLength();
     }
@@ -50,10 +58,15 @@ public class Request {
         requestHeader.setPath(path);
     }
     public void setBody(String body) {
+        byte[] copy = subBytes(body);
+        this.body = new String(copy);
+    }
+
+    private byte[] subBytes(String body) {
         Integer contentLength = Integer.valueOf(this.requestHeader.getContentLength());
         byte[] copy = new byte[contentLength];
         System.arraycopy(body.getBytes(), 0, copy, 0, contentLength);
-        this.body = new String(copy);
+        return copy;
     }
     
     public String getFirstLine() {
